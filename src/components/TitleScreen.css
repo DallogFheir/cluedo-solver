@@ -1,0 +1,18 @@
+.title-screen {
+  text-align: center;
+}
+
+.player-form {
+  margin: 20px;
+  display: flex;
+  flex-direction: column;
+  width: 30em;
+}
+
+.player-form input {
+  margin: 10px;
+}
+
+.add-btn:hover {
+  color: #03b49f;
+}
