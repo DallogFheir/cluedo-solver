@@ -3,11 +3,23 @@ import TitleScreen from "./components/TitleScreen";
 import { useState } from "react";
 
 function App() {
-  const [players, setPlayers] = useState(["", "", ""]);
+  const [currentScreen, setCurrentScreen] = useState("titleScreen");
+
+  const [players, setPlayers] = useState([
+    { player: "" },
+    { player: "" },
+    { player: "" },
+  ]);
 
   return (
-    <div class="container">
-      <TitleScreen players={players} setPlayers={setPlayers} />
+    <div className="container">
+      {currentScreen === "titleScreen" && (
+        <TitleScreen
+          players={players}
+          setPlayers={setPlayers}
+          setCurrentScreen={setCurrentScreen}
+        />
+      )}
     </div>
   );
 }

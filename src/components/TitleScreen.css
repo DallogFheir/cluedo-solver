@@ -3,16 +3,63 @@
 }
 
 .player-form {
-  margin: 20px;
+  margin: 20px auto;
   display: flex;
   flex-direction: column;
-  width: 30em;
+  width: 20em;
 }
 
 .player-form input {
-  margin: 10px;
+  margin: 10px auto;
+  margin-right: 5px;
+}
+
+.input {
+  position: relative;
 }
 
 .add-btn:hover {
   color: #03b49f;
+}
+
+.del-btn {
+  position: absolute;
+  top: 12px;
+}
+
+.del-btn:hover {
+  color: #b44a03;
+}
+
+.next-btn {
+  font-size: 60px;
+  position: absolute;
+  right: 20px;
+}
+
+.next-btn:hover {
+  color: #03b49f;
+}
+
+.error-shake {
+  animation: shake 0.2s ease-in-out 0s;
+}
+
+.error-shadow {
+  box-shadow: 0 0 0.5em red;
+}
+
+@keyframes shake {
+  0% {
+    margin-left: 0rem;
+  }
+  25% {
+    margin-left: 0.5rem;
+  }
+  75% {
+    margin-left: -0.5rem;
+  }
+  100% {
+    margin-left: 0rem;
+  }
 }
