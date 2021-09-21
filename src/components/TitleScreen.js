@@ -63,7 +63,7 @@ function TitleScreen({ players, setPlayers, setCurrentScreen }) {
           }
 
           if (flag) {
-            setCurrentScreen("main");
+            setCurrentScreen("CardSelectScreen");
           }
         }}
       ></i>

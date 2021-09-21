@@ -1,0 +1,27 @@
+.card-select-screen {
+  text-align: center;
+}
+
+.card-form {
+  margin: 20px auto;
+  display: flex;
+  flex-direction: column;
+  width: 20em;
+}
+
+.card-form input {
+  margin: 10px auto;
+}
+
+.fade-in {
+  animation: fade-in 2s;
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
