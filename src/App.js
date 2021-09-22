@@ -9,17 +9,17 @@ import { useState } from "react";
 function App() {
   const gameElements = {
     rooms: [
-      "biblioteka",
-      "gabinet",
-      "hol",
-      "jadalnia",
-      "kuchnia",
-      "sala balowa",
-      "sala bilardowa",
-      "salon",
-      "weranda",
+      "Biblioteka",
+      "Gabinet",
+      "Hol",
+      "Jadalnia",
+      "Kuchnia",
+      "Sala balowa",
+      "Sala bilardowa",
+      "Salon",
+      "Weranda",
     ],
-    people: [
+    suspects: [
       "Ksiądz Zieliński",
       "Pani Bielecka",
       "Pani Pawińska",
@@ -38,6 +38,7 @@ function App() {
   };
 
   const [currentScreen, setCurrentScreen] = useState("TitleScreen");
+  const [playerCards, setPlayerCards] = useState([]);
 
   const [players, setPlayers] = useState([
     { player: "" },
@@ -55,7 +56,12 @@ function App() {
         />
       )}
       {currentScreen === "CardSelectScreen" && (
-        <CardSelectScreen players={players} gameElements={gameElements} />
+        <CardSelectScreen
+          players={players}
+          playerCards={playerCards}
+          setPlayerCards={setPlayerCards}
+          gameElements={gameElements}
+        />
       )}
     </div>
   );

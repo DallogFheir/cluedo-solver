@@ -44,29 +44,31 @@ function TitleScreen({ players, setPlayers, setCurrentScreen }) {
           ></i>
         </p>
       )}
-      <i
-        className="next-btn bi bi-arrow-right-circle-fill"
-        onClick={() => {
-          let flag = true;
+      <div className="next-btn-container">
+        <i
+          className="next-btn bi bi-arrow-right-circle-fill"
+          onClick={() => {
+            let flag = true;
 
-          for (const ref of refs) {
-            if (ref.current) {
-              if (ref.current.value === "") {
-                ref.current.classList.add("error-shake");
-                ref.current.classList.add("error-shadow");
-                setTimeout(() => {
-                  ref.current.classList.remove("error-shake");
-                }, 1000);
-                flag = false;
+            for (const ref of refs) {
+              if (ref.current) {
+                if (ref.current.value === "") {
+                  ref.current.classList.add("error-shake");
+                  ref.current.classList.add("error-shadow");
+                  setTimeout(() => {
+                    ref.current.classList.remove("error-shake");
+                  }, 1000);
+                  flag = false;
+                }
               }
             }
-          }
 
-          if (flag) {
-            setCurrentScreen("CardSelectScreen");
-          }
-        }}
-      ></i>
+            if (flag) {
+              setCurrentScreen("CardSelectScreen");
+            }
+          }}
+        ></i>
+      </div>
     </div>
   );
 }
