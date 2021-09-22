@@ -60,6 +60,7 @@ function App() {
           players={players}
           playerCards={playerCards}
           setPlayerCards={setPlayerCards}
+          setCurrentScreen={setCurrentScreen}
           gameElements={gameElements}
         />
       )}
