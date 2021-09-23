@@ -1,6 +1,3 @@
-// TODO
-// fix shake animation
-
 import "./CardSelectScreen.css";
 import { useEffect, useRef } from "react";
 

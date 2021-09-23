@@ -1,6 +1,3 @@
-// TODO
-// make image responsive
-
 import "./TitleScreen.css";
 import { useRef } from "react";
 
@@ -9,7 +6,11 @@ function TitleScreen({ players, setPlayers, setCurrentScreen }) {
 
   return (
     <div className="title-screen">
-      <img src="logo.png" alt="logo" />
+      <picture>
+        <source srcSet="logo_big.png" media="(min-width: 900px)" />
+        <source srcSet="logo_medium.png" media="(min-width: 500px)" />
+        <img className="logo" src="logo_small.png" alt="logo" />
+      </picture>
       <p>Wpisz imiona graczy:</p>
       <form className="player-form">
         {players.map((player, idx) => (
