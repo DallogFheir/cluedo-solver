@@ -1,9 +1,7 @@
-// TODO
-// zmienic odcisk na ciemnozielony
-
 import "./App.css";
 import TitleScreen from "./components/TitleScreen";
 import CardSelectScreen from "./components/CardSelectScreen";
+import MainScreen from "./components/MainScreen";
 import { useState } from "react";
 
 function App() {
@@ -47,7 +45,7 @@ function App() {
   ]);
 
   return (
-    <div className="container">
+    <div className="background">
       {currentScreen === "TitleScreen" && (
         <TitleScreen
           players={players}
@@ -63,6 +61,9 @@ function App() {
           setCurrentScreen={setCurrentScreen}
           gameElements={gameElements}
         />
+      )}
+      {currentScreen == "MainScreen" && (
+        <MainScreen players={players} gameElements={gameElements} />
       )}
     </div>
   );

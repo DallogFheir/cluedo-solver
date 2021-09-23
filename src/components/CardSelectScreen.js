@@ -98,7 +98,11 @@ function CardSelectScreen({
               }
             }
 
-            let flag = true;
+            for (const ref of playerCardsRefs) {
+              ref.current.classList.remove("error-shadow");
+            }
+
+            let allowNext = true;
             for (const idx of duplicateIndices) {
               const ref = playerCardsRefs[idx];
               ref.current.classList.add("error-shake");
@@ -106,11 +110,11 @@ function CardSelectScreen({
               setTimeout(() => {
                 ref.current.classList.remove("error-shake");
               }, 1000);
-              flag = false;
+              allowNext = false;
             }
 
             // go to next screen
-            if (flag) {
+            if (allowNext) {
               setCurrentScreen("MainScreen");
             }
           }}

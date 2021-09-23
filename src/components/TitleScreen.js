@@ -49,7 +49,7 @@ function TitleScreen({ players, setPlayers, setCurrentScreen }) {
         <i
           className="next-btn bi bi-arrow-right-circle-fill"
           onClick={() => {
-            let flag = true;
+            let allowNext = true;
 
             for (const ref of refs) {
               if (ref.current) {
@@ -59,12 +59,12 @@ function TitleScreen({ players, setPlayers, setCurrentScreen }) {
                   setTimeout(() => {
                     ref.current.classList.remove("error-shake");
                   }, 1000);
-                  flag = false;
+                  allowNext = false;
                 }
               }
             }
 
-            if (flag) {
+            if (allowNext) {
               setCurrentScreen("CardSelectScreen");
             }
           }}
