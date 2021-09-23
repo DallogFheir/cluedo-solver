@@ -1,3 +1,9 @@
-.text-center {
+.header-text {
   text-align: center;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.not-card {
+  color: grey;
 }

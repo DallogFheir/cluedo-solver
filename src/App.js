@@ -36,12 +36,10 @@ function App() {
   };
 
   const [currentScreen, setCurrentScreen] = useState("TitleScreen");
-  const [playerCards, setPlayerCards] = useState([]);
-
   const [players, setPlayers] = useState([
-    { player: "" },
-    { player: "" },
-    { player: "" },
+    { player: "", cards: [], notCards: [] },
+    { player: "", cards: [], notCards: [] },
+    { player: "", cards: [], notCards: [] },
   ]);
 
   return (
@@ -56,13 +54,12 @@ function App() {
       {currentScreen === "CardSelectScreen" && (
         <CardSelectScreen
           players={players}
-          playerCards={playerCards}
-          setPlayerCards={setPlayerCards}
+          setPlayers={setPlayers}
           setCurrentScreen={setCurrentScreen}
           gameElements={gameElements}
         />
       )}
-      {currentScreen == "MainScreen" && (
+      {currentScreen === "MainScreen" && (
         <MainScreen players={players} gameElements={gameElements} />
       )}
     </div>

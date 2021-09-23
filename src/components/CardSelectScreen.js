@@ -1,22 +1,14 @@
 import "./CardSelectScreen.css";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 
 function CardSelectScreen({
   players,
-  playerCards,
-  setPlayerCards,
+  setPlayers,
   setCurrentScreen,
   gameElements,
 }) {
   const howManyCards = Math.floor(18 / players.length);
-
-  // at first render, fill all selects with first item
-  useEffect(() => {
-    playerCards.length = howManyCards;
-    playerCards.fill("Ksiądz Zieliński");
-    setPlayerCards([...playerCards]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const playerCards = Array(howManyCards).fill("Ksiądz Zieliński");
 
   //   refs for selects
   const playerCardsRefs = [
@@ -42,7 +34,6 @@ function CardSelectScreen({
               e.target.classList.remove("error-shadow");
               // modify playerCards
               playerCards[idx] = e.target.value;
-              setPlayerCards([...playerCards]);
             }}
           >
             <optgroup label="Podejrzani">
@@ -115,6 +106,27 @@ function CardSelectScreen({
 
             // go to next screen
             if (allowNext) {
+              // put all cards that player doesn't have to notCards
+              let notCards = [];
+              for (const notType of ["suspects", "tools", "rooms"]) {
+                const notTypeCards = gameElements[notType].filter(
+                  (el) => !playerCards.includes(el)
+                );
+
+                notCards = [...notCards, ...notTypeCards];
+              }
+
+              players[Object.keys(players)[0]].cards = playerCards;
+              players[Object.keys(players)[0]].notCards = notCards;
+
+              //   put player's cards into notCards of other players
+              for (const player of players) {
+                if (player !== players[Object.keys(players)[0]]) {
+                  player.notCards = playerCards;
+                }
+              }
+
+              setPlayers([...players]);
               setCurrentScreen("MainScreen");
             }
           }}

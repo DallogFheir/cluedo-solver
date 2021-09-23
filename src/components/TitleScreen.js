@@ -17,10 +17,12 @@ function TitleScreen({ players, setPlayers, setCurrentScreen }) {
           <div key={idx} className="input">
             <input
               ref={refs[idx]}
-              placeholder="Wpisz imię gracza..."
+              placeholder={
+                idx === 0 ? "Wpisz swoję imię." : "Wpisz imię gracza."
+              }
               value={player.player}
               onChange={(e) => {
-                players[idx] = { player: e.target.value };
+                players[idx].player = e.target.value;
                 setPlayers([...players]);
                 e.target.classList.remove("error-shadow");
               }}
@@ -41,7 +43,9 @@ function TitleScreen({ players, setPlayers, setCurrentScreen }) {
           Dodaj więcej graczy{" "}
           <i
             className="add-btn bi bi-plus-circle-fill"
-            onClick={() => setPlayers([...players, { player: null }])}
+            onClick={() =>
+              setPlayers([...players, { player: null, cards: [] }])
+            }
           ></i>
         </p>
       )}
