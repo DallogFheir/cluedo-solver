@@ -3,19 +3,35 @@ import "./MainScreen.css";
 function MainScreen({ players, gameElements }) {
   return (
     <div className="container fade-in">
-      <div className="row">
-        <div className="col-lg-6 col-12">
+      <div className="row mb-5">
+        <div className="col-12 events">
+          <p className="event-title">Wydarzenia</p>
+          <button className="btn btn-light event-btn">
+            ktoś pokazał mi kartę
+          </button>
+          <button className="btn btn-light event-btn">
+            ktoś pokazał komuś innemu kartę
+          </button>
+          <button className="btn btn-light event-btn">
+            nikt nie miał kart
+          </button>
+        </div>
+      </div>
+      <div className="row mt-5">
+        {/* SUSPECTS */}
+        <div className="col-lg-4 col-12">
           <table className="table text-light">
             <thead>
               <tr>
                 <th></th>
                 {players.map((player, idx) => (
-                  <th key={idx}>{player.player}</th>
+                  <th key={idx} className="table-item">
+                    {player.player}
+                  </th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {/* SUSPECTS */}
               <tr>
                 <td className="header-text" colSpan="4">
                   Podejrzani
@@ -26,9 +42,10 @@ function MainScreen({ players, gameElements }) {
                   <td>{suspect}</td>
                   {players.map((player) => (
                     <td
-                      className={
-                        player.notCards.includes(suspect) ? "not-card" : ""
-                      }
+                      className={[
+                        player.notCards.includes(suspect) ? "not-card" : "",
+                        "table-item",
+                      ].join(" ")}
                     >
                       {player.cards.includes(suspect)
                         ? "✓"
@@ -39,7 +56,24 @@ function MainScreen({ players, gameElements }) {
                   ))}
                 </tr>
               ))}
-              {/* TOOLS */}
+            </tbody>
+          </table>
+        </div>
+        <div className="w-100 d-lg-none"></div>
+        {/* TOOLS */}
+        <div className="col-lg-4 col-12">
+          <table className="table text-light">
+            <thead>
+              <tr>
+                <th></th>
+                {players.map((player, idx) => (
+                  <th key={idx} className="table-item">
+                    {player.player}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
               <tr>
                 <td className="header-text" colSpan="4">
                   Narzędzia zbrodni
@@ -50,9 +84,10 @@ function MainScreen({ players, gameElements }) {
                   <td>{tool}</td>
                   {players.map((player) => (
                     <td
-                      className={
-                        player.notCards.includes(tool) ? "not-card" : ""
-                      }
+                      className={[
+                        player.notCards.includes(tool) ? "not-card" : "",
+                        "table-item",
+                      ].join(" ")}
                     >
                       {player.cards.includes(tool)
                         ? "✓"
@@ -63,7 +98,24 @@ function MainScreen({ players, gameElements }) {
                   ))}
                 </tr>
               ))}
-              {/* ROOMS */}
+            </tbody>
+          </table>
+        </div>
+        <div className="w-100 d-lg-none"></div>
+        {/* ROOMS */}
+        <div className="col-lg-4 col-12">
+          <table className="table text-light">
+            <thead>
+              <tr>
+                <th></th>
+                {players.map((player, idx) => (
+                  <th key={idx} className="table-item">
+                    {player.player}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
               <tr>
                 <td className="header-text" colSpan="4">
                   Pomieszczenia
@@ -74,9 +126,10 @@ function MainScreen({ players, gameElements }) {
                   <td>{room}</td>
                   {players.map((player) => (
                     <td
-                      className={
-                        player.notCards.includes(room) ? "not-card" : ""
-                      }
+                      className={[
+                        player.notCards.includes(room) ? "not-card" : "",
+                        "table-item",
+                      ].join(" ")}
                     >
                       {player.cards.includes(room)
                         ? "✓"
@@ -90,8 +143,6 @@ function MainScreen({ players, gameElements }) {
             </tbody>
           </table>
         </div>
-        <div className="w-100 d-lg-none"></div>
-        <div className="col-lg-6 col-12">tekst2</div>
       </div>
     </div>
   );
