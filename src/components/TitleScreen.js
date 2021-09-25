@@ -1,8 +1,20 @@
 import "./TitleScreen.css";
-import { useRef } from "react";
+import { useEffect, useMemo } from "react";
 
 function TitleScreen({ players, setPlayers, setCurrentScreen }) {
-  const refs = [useRef(), useRef(), useRef(), useRef(), useRef(), useRef()];
+  const refs = useMemo(() => [null, null, null, null, null, null], []);
+
+  //   focus last input
+  useEffect(() => {
+    const input = refs[players.length - 1];
+    if (input) {
+      input.focus();
+    }
+  }, [refs, players.length]);
+  //   on first render, focus the first input
+  useEffect(() => {
+    refs[0].focus();
+  }, [refs]);
 
   return (
     <div className="title-screen">
@@ -16,11 +28,13 @@ function TitleScreen({ players, setPlayers, setCurrentScreen }) {
         {players.map((player, idx) => (
           <div key={idx} className="input">
             <input
-              ref={refs[idx]}
+              ref={(thisInput) => {
+                refs[idx] = thisInput;
+              }}
               placeholder={
                 idx === 0 ? "Wpisz swoję imię." : "Wpisz imię gracza."
               }
-              value={player.player}
+              value={player.player ?? undefined}
               onChange={(e) => {
                 players[idx].player = e.target.value;
                 setPlayers([...players]);
@@ -43,9 +57,9 @@ function TitleScreen({ players, setPlayers, setCurrentScreen }) {
           Dodaj więcej graczy{" "}
           <i
             className="add-btn bi bi-plus-circle-fill"
-            onClick={() =>
-              setPlayers([...players, { player: null, cards: [] }])
-            }
+            onClick={() => {
+              setPlayers([...players, { player: null, cards: [] }]);
+            }}
           ></i>
         </p>
       )}
@@ -56,12 +70,12 @@ function TitleScreen({ players, setPlayers, setCurrentScreen }) {
             let allowNext = true;
 
             for (const ref of refs) {
-              if (ref.current) {
-                if (ref.current.value === "") {
-                  ref.current.classList.add("error-shake");
-                  ref.current.classList.add("error-shadow");
+              if (ref) {
+                if (ref.value === "") {
+                  ref.classList.add("error-shake");
+                  ref.classList.add("error-shadow");
                   setTimeout(() => {
-                    ref.current.classList.remove("error-shake");
+                    ref.classList.remove("error-shake");
                   }, 1000);
                   allowNext = false;
                 }

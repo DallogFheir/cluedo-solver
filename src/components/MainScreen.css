@@ -26,3 +26,41 @@
 .table-item {
   text-align: center;
 }
+
+.inactive {
+  pointer-events: none;
+  opacity: 50%;
+}
+
+.popup {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  margin: auto;
+  width: 50%;
+  text-align: center;
+  background-color: #002722;
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 0 50px #002722;
+}
+
+.popup-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.popup-text {
+  margin-top: 20px;
+}
+
+.popup-icon {
+  display: block;
+  margin-top: 20px;
+  font-size: 2rem;
+}
+
+.popup-icon:hover {
+  color: #03b49f;
+}

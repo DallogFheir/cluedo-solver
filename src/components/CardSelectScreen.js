@@ -116,13 +116,13 @@ function CardSelectScreen({
                 notCards = [...notCards, ...notTypeCards];
               }
 
-              players[Object.keys(players)[0]].cards = playerCards;
-              players[Object.keys(players)[0]].notCards = notCards;
+              players[0].cards = playerCards;
+              players[0].notCards = notCards;
 
               //   put player's cards into notCards of other players
               for (const player of players) {
-                if (player !== players[Object.keys(players)[0]]) {
-                  player.notCards = playerCards;
+                if (player !== players[0]) {
+                  player.notCards = [...playerCards];
                 }
               }
 

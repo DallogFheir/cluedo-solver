@@ -60,7 +60,11 @@ function App() {
         />
       )}
       {currentScreen === "MainScreen" && (
-        <MainScreen players={players} gameElements={gameElements} />
+        <MainScreen
+          players={players}
+          setPlayers={setPlayers}
+          gameElements={gameElements}
+        />
       )}
     </div>
   );
