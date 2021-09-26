@@ -1,9 +1,6 @@
 import "./MainScreen.css";
 import { useState } from "react";
 
-// TODO
-// check for 6 suspects/tools in card select screen
-
 function MainScreen({ players, setPlayers, gameElements }) {
   const [popup, setPopup] = useState(false);
   const [popupType, setPopupType] = useState(null);

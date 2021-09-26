@@ -104,8 +104,26 @@ function CardSelectScreen({
               allowNext = false;
             }
 
-            // go to next screen
+            // check for 6 suspects or 6 tools
+            debugger;
+            for (const element of [gameElements.suspects, gameElements.tools]) {
+              if (
+                element.filter((el) => !playerCards.includes(el)).length === 0
+              ) {
+                allowNext = false;
+                for (const ref of playerCardsRefs) {
+                  ref.current.classList.add("error-shake");
+                  ref.current.classList.add("error-shadow");
+                  setTimeout(() => {
+                    ref.current.classList.remove("error-shake");
+                  }, 1000);
+                }
+                break;
+              }
+            }
+
             if (allowNext) {
+              // go to next screen
               // put all cards that player doesn't have to notCards
               let notCards = [];
               for (const notType of ["suspects", "tools", "rooms"]) {
