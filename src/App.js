@@ -2,7 +2,7 @@ import "./App.css";
 import TitleScreen from "./components/TitleScreen";
 import CardSelectScreen from "./components/CardSelectScreen";
 import MainScreen from "./components/MainScreen";
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 function App() {
   const gameElements = {
@@ -42,8 +42,10 @@ function App() {
     { player: "", cards: [], notCards: [] },
   ]);
 
+  const background = useRef();
+
   return (
-    <div className="background">
+    <div className="background" ref={background}>
       {currentScreen === "TitleScreen" && (
         <TitleScreen
           players={players}
@@ -63,6 +65,7 @@ function App() {
         <MainScreen
           players={players}
           setPlayers={setPlayers}
+          background={background}
           gameElements={gameElements}
         />
       )}

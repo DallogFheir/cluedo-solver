@@ -1,21 +1,72 @@
 import "./MainScreen.css";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
-function MainScreen({ players, setPlayers, gameElements }) {
+function MainScreen({ players, setPlayers, background, gameElements }) {
+  const calculatePlayersCards = (player) =>
+    gameElements.suspects
+      .concat(gameElements.tools)
+      .concat(gameElements.rooms)
+      .filter(
+        (el) => !player.cards.includes(el) && !player.notCards.includes(el)
+      );
+
   const [popup, setPopup] = useState(false);
   const [popupType, setPopupType] = useState(null);
 
-  let whoShowed = players[1].player;
-  let whatWasShown = null;
+  const popupRef = useRef();
+
+  //   whoShowed is first player that can still show cards
+  let whoShowedTemp;
+  for (const player of players.slice(1)) {
+    if (calculatePlayersCards(player) !== 0) {
+      whoShowedTemp = player;
+      break;
+    }
+  }
+  const [whoShowed, setWhoShowed] = useState(whoShowedTemp);
+  let whatWasShown = calculatePlayersCards(whoShowed)[0];
+
+  //   add listener to background to close the popup
+  useEffect(() => {
+    const backg = background.current;
+
+    const closePopup = (e) => {
+      if (popup) {
+        const checkBtn = popupRef.current.querySelector("i");
+
+        const popupChildren = Array.from(
+          popupRef.current.querySelectorAll("*")
+        );
+        if (
+          !popupChildren.includes(e.target) &&
+          e.target !== popupRef.current &&
+          e.target !== checkBtn
+        ) {
+          setPopup(false);
+        }
+      }
+    };
+
+    backg.addEventListener("click", closePopup);
+    return () => {
+      backg.removeEventListener("click", closePopup);
+    };
+  }, [background, popup]);
 
   const popups = {
     "someone-showed-me": (
-      <div className="popup">
+      <div className="popup" ref={popupRef}>
         <p className="popup-title">ktoś pokazał mi kartę</p>
         <p className="popup-text">Wybierz osobę, która pokazała Ci kartę:</p>
         <select
           onChange={(e) => {
-            whoShowed = e.target.value;
+            const playerName = e.target.value;
+
+            for (const player of players.slice(1)) {
+              if (player.player === playerName) {
+                setWhoShowed(player);
+              }
+            }
           }}
         >
           {players.slice(1).map((player, idx) => (
@@ -26,30 +77,34 @@ function MainScreen({ players, setPlayers, gameElements }) {
         <select
           onChange={(e) => {
             whatWasShown = e.target.value;
-            // TODO
-            // make it so it ignores cards whose ownership is known
           }}
         >
           <optgroup label="Podejrzani">
-            {gameElements.suspects.map((suspect, idx) => (
-              <option key={idx} value={suspect}>
-                {suspect}
-              </option>
-            ))}
+            {gameElements.suspects
+              .filter((el) => calculatePlayersCards(whoShowed).includes(el))
+              .map((suspect, idx) => (
+                <option key={idx} value={suspect}>
+                  {suspect}
+                </option>
+              ))}
           </optgroup>
           <optgroup label="Narzędzia zbrodni">
-            {gameElements.tools.map((tool, idx) => (
-              <option key={idx} value={tool}>
-                {tool}
-              </option>
-            ))}
+            {gameElements.tools
+              .filter((el) => calculatePlayersCards(whoShowed).includes(el))
+              .map((tool, idx) => (
+                <option key={idx} value={tool}>
+                  {tool}
+                </option>
+              ))}
           </optgroup>
           <optgroup label="Pomieszczenia">
-            {gameElements.rooms.map((room, idx) => (
-              <option key={idx} value={room}>
-                {room}
-              </option>
-            ))}
+            {gameElements.rooms
+              .filter((el) => calculatePlayersCards(whoShowed).includes(el))
+              .map((room, idx) => (
+                <option key={idx} value={room}>
+                  {room}
+                </option>
+              ))}
           </optgroup>
         </select>
         <i
@@ -57,12 +112,12 @@ function MainScreen({ players, setPlayers, gameElements }) {
           onClick={() => {
             //   handles pushing what was shown into cards and notCards
             for (const player of players.slice(1)) {
-              if (player.player === whoShowed) {
+              console.log("PLAYER ", player);
+              if (player === whoShowed) {
                 player.cards.push(whatWasShown);
-                debugger;
+                console.log("WHOSHOWED ", whoShowed);
                 for (const otherPlayer of players.slice(1)) {
-                  console.log(players[2].notCards);
-                  if (otherPlayer.player !== whoShowed) {
+                  if (otherPlayer !== whoShowed) {
                     otherPlayer.notCards.push(whatWasShown);
                   }
                 }
