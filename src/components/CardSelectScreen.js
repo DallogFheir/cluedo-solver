@@ -105,7 +105,6 @@ function CardSelectScreen({
             }
 
             // check for 6 suspects or 6 tools
-            debugger;
             for (const element of [gameElements.suspects, gameElements.tools]) {
               if (
                 element.filter((el) => !playerCards.includes(el)).length === 0

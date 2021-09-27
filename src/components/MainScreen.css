@@ -55,6 +55,11 @@
   margin-top: 20px;
 }
 
+.popup-select {
+  display: block;
+  margin: 10px auto;
+}
+
 .popup-icon {
   display: block;
   margin-top: 20px;

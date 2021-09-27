@@ -4,6 +4,9 @@ import CardSelectScreen from "./components/CardSelectScreen";
 import MainScreen from "./components/MainScreen";
 import { useState, useRef } from "react";
 
+// TODO
+// make next button responsive
+
 function App() {
   const gameElements = {
     rooms: [
