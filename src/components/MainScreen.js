@@ -374,7 +374,15 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
                           ? "solution"
                           : players.filter((player) =>
                               player.cards.includes(tool)
-                            ).length > 0
+                            ).length > 0 ||
+                            gameElements.tools
+                              .map(
+                                (tool) =>
+                                  players.filter(
+                                    (player) => !player.notCards.includes(tool)
+                                  ).length === 0
+                              )
+                              .some((el) => el)
                           ? "not-solution"
                           : ""
                       }
@@ -431,7 +439,15 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
                           ? "solution"
                           : players.filter((player) =>
                               player.cards.includes(room)
-                            ).length > 0
+                            ).length > 0 ||
+                            gameElements.rooms
+                              .map(
+                                (room) =>
+                                  players.filter(
+                                    (player) => !player.notCards.includes(room)
+                                  ).length === 0
+                              )
+                              .some((el) => el)
                           ? "not-solution"
                           : ""
                       }
