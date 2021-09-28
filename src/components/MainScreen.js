@@ -308,7 +308,16 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
                           ? "solution"
                           : players.filter((player) =>
                               player.cards.includes(suspect)
-                            ).length > 0
+                            ).length > 0 ||
+                            gameElements.suspects
+                              .map(
+                                (suspect) =>
+                                  players.filter(
+                                    (player) =>
+                                      !player.notCards.includes(suspect)
+                                  ).length === 0
+                              )
+                              .some((el) => el)
                           ? "not-solution"
                           : ""
                       }

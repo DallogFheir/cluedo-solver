@@ -40,7 +40,7 @@
 }
 
 .not-solution {
-  color: rgba(0, 144, 127, 0.623);
+  color: grey;
   text-decoration: line-through;
 }
 
