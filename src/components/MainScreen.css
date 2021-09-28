@@ -32,6 +32,18 @@
   opacity: 50%;
 }
 
+.solution {
+  color: #03b49f;
+  font-weight: bold;
+  font-size: 1.1em;
+  text-shadow: 0 0 10px #03b49f;
+}
+
+.not-solution {
+  color: rgba(0, 144, 127, 0.623);
+  text-decoration: line-through;
+}
+
 .popup {
   position: absolute;
   top: 50%;

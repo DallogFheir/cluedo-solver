@@ -300,7 +300,21 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
                 </tr>
                 {gameElements.suspects.map((suspect, susIdx) => (
                   <tr key={susIdx}>
-                    <td>{suspect}</td>
+                    <td
+                      className={
+                        players.filter(
+                          (player) => !player.notCards.includes(suspect)
+                        ).length === 0
+                          ? "solution"
+                          : players.filter((player) =>
+                              player.cards.includes(suspect)
+                            ).length > 0
+                          ? "not-solution"
+                          : ""
+                      }
+                    >
+                      {suspect}
+                    </td>
                     {players.map((player, idx) => (
                       <td
                         key={idx}
@@ -343,7 +357,21 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
                 </tr>
                 {gameElements.tools.map((tool, toolIdx) => (
                   <tr key={toolIdx}>
-                    <td>{tool}</td>
+                    <td
+                      className={
+                        players.filter(
+                          (player) => !player.notCards.includes(tool)
+                        ).length === 0
+                          ? "solution"
+                          : players.filter((player) =>
+                              player.cards.includes(tool)
+                            ).length > 0
+                          ? "not-solution"
+                          : ""
+                      }
+                    >
+                      {tool}
+                    </td>
                     {players.map((player, idx) => (
                       <td
                         key={idx}
@@ -386,7 +414,21 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
                 </tr>
                 {gameElements.rooms.map((room, roomIdx) => (
                   <tr key={roomIdx}>
-                    <td>{room}</td>
+                    <td
+                      className={
+                        players.filter(
+                          (player) => !player.notCards.includes(room)
+                        ).length === 0
+                          ? "solution"
+                          : players.filter((player) =>
+                              player.cards.includes(room)
+                            ).length > 0
+                          ? "not-solution"
+                          : ""
+                      }
+                    >
+                      {room}
+                    </td>
                     {players.map((player, idx) => (
                       <td
                         key={idx}
