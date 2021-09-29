@@ -1,6 +1,9 @@
 import "./MainScreen.css";
 import { useState, useEffect, useRef } from "react";
 
+// TODO
+// make it so that cards in no-one-had-cards update when solution is known
+
 function MainScreen({ players, setPlayers, background, gameElements }) {
   const calculatePlayersCards = (player) =>
     gameElements.suspects
@@ -49,6 +52,34 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
           .some((player) => player.cards.includes(el))
     )[0],
   };
+
+  const [whoShowedToSomeoneElse, setWhoShowedToSomeoneElse] =
+    useState(whoShowedTemp);
+  let whatSomeoneShowedToSomeoneElse = {
+    suspect: gameElements.suspects.filter((el) => {
+      const player = players.filter(
+        (player) => player.player === whoShowedToSomeoneElse.player
+      )[0];
+
+      return !player.cards.includes(el);
+    })[0],
+    tool: gameElements.tools.filter((el) => {
+      const player = players.filter(
+        (player) => player.player === whoShowedToSomeoneElse.player
+      )[0];
+
+      return !player.cards.includes(el);
+    })[0],
+    room: gameElements.rooms.filter((el) => {
+      const player = players.filter(
+        (player) => player.player === whoShowedToSomeoneElse.player
+      )[0];
+
+      return !player.cards.includes(el);
+    })[0],
+  };
+
+  const [enquiries, setEnquiries] = useState([]);
 
   //   add listener to background to close the popup
   useEffect(() => {
@@ -148,6 +179,100 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
                 break;
               }
             }
+          }}
+        ></i>
+      </div>
+    ),
+    "someone-showed-someone-else": (
+      <div className="popup" ref={popupRef}>
+        <p className="popup-title">ktoś pokazał kartę komuś innemu</p>
+        <p className="popup-text">Wybierz osobę, która pokazała kartę:</p>
+        <select
+          onChange={(e) => {
+            const playerName = e.target.value;
+
+            for (const player of players.slice(1)) {
+              if (player.player === playerName) {
+                setWhoShowedToSomeoneElse(player);
+              }
+            }
+          }}
+        >
+          {players.slice(1).map((player, idx) => (
+            <option key={idx}>{player.player}</option>
+          ))}
+        </select>
+        <p className="popup-text">Wybierz karty, o które ktoś pytał:</p>
+        <select
+          className="popup-select"
+          onChange={(e) => {
+            whatSomeoneShowedToSomeoneElse.suspect = e.target.value;
+          }}
+        >
+          {gameElements.suspects
+            .filter((el) => {
+              // filters out cards that player already has shown (there's no point in asking then)
+              const player = players.filter(
+                (player) => player.player === whoShowedToSomeoneElse.player
+              )[0];
+
+              return !player.cards.includes(el);
+            })
+            .map((suspect, idx) => (
+              <option key={idx} value={suspect}>
+                {suspect}
+              </option>
+            ))}
+        </select>
+        <select
+          className="popup-select"
+          onChange={(e) => {
+            whatSomeoneShowedToSomeoneElse.tool = e.target.value;
+          }}
+        >
+          {gameElements.tools
+            .filter((el) => {
+              // filters out cards that player already has shown (there's no point in asking then)
+              const player = players.filter(
+                (player) => player.player === whoShowedToSomeoneElse.player
+              )[0];
+
+              return !player.cards.includes(el);
+            })
+            .map((tool, idx) => (
+              <option key={idx} value={tool}>
+                {tool}
+              </option>
+            ))}
+        </select>
+        <select
+          className="popup-select"
+          onChange={(e) => {
+            whatSomeoneShowedToSomeoneElse.room = e.target.value;
+          }}
+        >
+          {gameElements.rooms
+            .filter((el) => {
+              // filters out cards that player already has shown (there's no point in asking then)
+              const player = players.filter(
+                (player) => player.player === whoShowedToSomeoneElse.player
+              )[0];
+
+              return !player.cards.includes(el);
+            })
+            .map((room, idx) => (
+              <option key={idx} value={room}>
+                {room}
+              </option>
+            ))}
+        </select>
+        <i
+          className="popup-icon bi bi-check-circle-fill"
+          onClick={() => {
+            enquiries.push(Object.values(whatSomeoneShowedToSomeoneElse));
+
+            setEnquiries(enquiries);
+            setPopup(false);
           }}
         ></i>
       </div>
@@ -264,8 +389,14 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
             >
               ktoś pokazał mi kartę
             </button>
-            <button className="btn btn-light event-btn">
-              ktoś pokazał komuś innemu kartę
+            <button
+              className="btn btn-light event-btn"
+              onClick={() => {
+                setPopup(true);
+                setPopupType("someone-showed-someone-else");
+              }}
+            >
+              ktoś pokazał kartę komuś innemu
             </button>
             <button
               className="btn btn-light event-btn"
