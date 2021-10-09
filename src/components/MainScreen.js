@@ -1,10 +1,6 @@
 import "./MainScreen.css";
 import { useState, useEffect, useRef } from "react";
 
-// TODO
-// make it so that cards in no-one-had-cards update when solution is known
-// players can show cards that they don't have
-
 function MainScreen({ players, setPlayers, background, gameElements }) {
   const calculatePlayersCards = (player) =>
     gameElements.suspects
@@ -170,6 +166,7 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
           e.target !== popupRef.current &&
           e.target !== checkBtn
         ) {
+          setWhoAsked(players[0]);
           setPopup(false);
         }
       }
@@ -179,7 +176,7 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
     return () => {
       backg.removeEventListener("click", closePopup);
     };
-  }, [background, popup]);
+  }, [background, popup, players]);
 
   const popups = {
     "someone-showed-me": (
@@ -376,18 +373,39 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
             whatNoOneHad.suspect = e.target.value;
           }}
         >
-          {gameElements.suspects
-            .filter(
-              (el) =>
-                !players
-                  .filter((el) => el !== whoAsked)
-                  .some((player) => player.cards.has(el))
-            )
-            .map((suspect, idx) => (
-              <option key={idx} value={suspect}>
-                {suspect}
-              </option>
-            ))}
+          {
+            //   if solution is known, only the player who asked's cards can be had by no one
+            gameElements.suspects.filter((suspect) =>
+              players.every((player) => player.notCards.has(suspect))
+            ).length === 1
+              ? gameElements.suspects
+                  .filter((el) => {
+                    console.log(el, whoAsked.cards.has(el));
+                    return (
+                      whoAsked.cards.has(el) ||
+                      players.every((player) => player.notCards.has(el)) ||
+                      !whoAsked.notCards.has(el)
+                    );
+                  })
+                  .map((suspect, idx) => (
+                    <option key={idx} value={suspect}>
+                      {suspect}
+                    </option>
+                  ))
+              : gameElements.suspects
+                  .filter(
+                    (el) =>
+                      !players
+                        .filter((el) => el !== whoAsked)
+                        .some((player) => player.cards.has(el)) ||
+                      whoAsked.cards.has(el)
+                  )
+                  .map((suspect, idx) => (
+                    <option key={idx} value={suspect}>
+                      {suspect}
+                    </option>
+                  ))
+          }
         </select>
         <select
           className="popup-select"
@@ -395,18 +413,39 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
             whatNoOneHad.tool = e.target.value;
           }}
         >
-          {gameElements.tools
-            .filter(
-              (el) =>
-                !players
-                  .filter((el) => el !== whoAsked)
-                  .some((player) => player.cards.has(el))
-            )
-            .map((tool, idx) => (
-              <option key={idx} value={tool}>
-                {tool}
-              </option>
-            ))}
+          {
+            //   if solution is known, only the player who asked's cards can be had by no one
+            gameElements.tools.filter((tool) =>
+              players.every((player) => player.notCards.has(tool))
+            ).length === 1
+              ? gameElements.tools
+                  .filter((el) => {
+                    console.log(el, whoAsked.cards.has(el));
+                    return (
+                      whoAsked.cards.has(el) ||
+                      players.every((player) => player.notCards.has(el)) ||
+                      !whoAsked.notCards.has(el)
+                    );
+                  })
+                  .map((tool, idx) => (
+                    <option key={idx} value={tool}>
+                      {tool}
+                    </option>
+                  ))
+              : gameElements.tools
+                  .filter(
+                    (el) =>
+                      !players
+                        .filter((el) => el !== whoAsked)
+                        .some((player) => player.cards.has(el)) ||
+                      whoAsked.cards.has(el)
+                  )
+                  .map((tool, idx) => (
+                    <option key={idx} value={tool}>
+                      {tool}
+                    </option>
+                  ))
+          }
         </select>
         <select
           className="popup-select"
@@ -414,18 +453,39 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
             whatNoOneHad.room = e.target.value;
           }}
         >
-          {gameElements.rooms
-            .filter(
-              (el) =>
-                !players
-                  .filter((el) => el !== whoAsked)
-                  .some((player) => player.cards.has(el))
-            )
-            .map((room, idx) => (
-              <option key={idx} value={room}>
-                {room}
-              </option>
-            ))}
+          {
+            //   if solution is known, only the player who asked's cards can be had by no one
+            gameElements.rooms.filter((room) =>
+              players.every((player) => player.notCards.has(room))
+            ).length === 1
+              ? gameElements.rooms
+                  .filter((el) => {
+                    console.log(el, whoAsked.cards.has(el));
+                    return (
+                      whoAsked.cards.has(el) ||
+                      players.every((player) => player.notCards.has(el)) ||
+                      !whoAsked.notCards.has(el)
+                    );
+                  })
+                  .map((room, idx) => (
+                    <option key={idx} value={room}>
+                      {room}
+                    </option>
+                  ))
+              : gameElements.rooms
+                  .filter(
+                    (el) =>
+                      !players
+                        .filter((el) => el !== whoAsked)
+                        .some((player) => player.cards.has(el)) ||
+                      whoAsked.cards.has(el)
+                  )
+                  .map((room, idx) => (
+                    <option key={idx} value={room}>
+                      {room}
+                    </option>
+                  ))
+          }
         </select>
         <i
           className="popup-icon bi bi-check-circle-fill"
