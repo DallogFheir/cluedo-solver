@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from "react";
 // TODO
 // make it so that cards in no-one-had-cards update when solution is known
 // players can show cards that they don't have
-// no one had cards doesnt work
 
 function MainScreen({ players, setPlayers, background, gameElements }) {
   const calculatePlayersCards = (player) =>
@@ -435,9 +434,13 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
             for (const player of players.filter(
               (player) => player !== whoAsked
             )) {
-              player.notCards.add(...Object.values(whatNoOneHad));
+              player.notCards = new Set([
+                ...player.notCards,
+                ...Object.values(whatNoOneHad),
+              ]);
             }
 
+            setWhoAsked(players[0]);
             setPlayers([...players]);
             setPopup(false);
           }}
