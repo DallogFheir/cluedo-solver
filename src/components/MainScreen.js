@@ -9,75 +9,122 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
       .filter((el) => !player.cards.has(el) && !player.notCards.has(el));
 
   const mainLogic = () => {
-    //   CHECK FOR SOLUTION THAT CAME ABOUT BY REJECTING OTHERS
-    // push the solution to everyone's notCards
-    for (const cardType of Object.keys(gameElements)) {
-      const length = gameElements[cardType].length;
+    while (true) {
+      const playersAtStart = [...players];
 
-      //   for each type, check if exactly n-1 cards (for n of possible cards) are in someone's cards
-      const inSomeonesCards = [];
-      for (const card of gameElements[cardType]) {
-        for (const player of players) {
-          if (player.cards.has(card)) {
-            inSomeonesCards.push(card);
-            break;
-          }
-        }
-      }
+      //   CHECK FOR SOLUTION THAT CAME ABOUT BY REJECTING OTHERS
+      // push the solution to everyone's notCards
+      for (const cardType of Object.keys(gameElements)) {
+        const length = gameElements[cardType].length;
 
-      if (inSomeonesCards.length === length - 1) {
-        const solution = gameElements[cardType].filter(
-          (card) => !inSomeonesCards.includes(card)
-        )[0];
-
-        // push to everyone's notCards
-        for (const player of players) {
-          player.notCards.add(solution);
-        }
-      }
-    }
-
-    // CHECK FOR CARDS THAT N-1 PLAYERS DON'T HAVE
-    // if solution is known, push them to the remaining player
-    for (const cardType of Object.keys(gameElements)) {
-      const ifSolution =
-        gameElements[cardType].filter(
-          (card) =>
-            players.filter((player) => player.notCards.has(card)).length ===
-            players.length
-        ).length > 0;
-
-      if (ifSolution) {
+        //   for each type, check if exactly n-1 cards (for n of possible cards) are in someone's cards
+        const inSomeonesCards = [];
         for (const card of gameElements[cardType]) {
-          const whoHasInNotCards = [];
           for (const player of players) {
-            if (player.notCards.has(card)) {
-              whoHasInNotCards.push(player);
+            if (player.cards.has(card)) {
+              inSomeonesCards.push(card);
+              break;
             }
           }
+        }
 
-          if (whoHasInNotCards.length === players.length - 1) {
-            const remainingPlayer = players.filter(
-              (player) => !whoHasInNotCards.includes(player)
-            )[0];
-            remainingPlayer.cards.add(card);
+        if (inSomeonesCards.length === length - 1) {
+          const solution = gameElements[cardType].filter(
+            (card) => !inSomeonesCards.includes(card)
+          )[0];
+
+          // push to everyone's notCards
+          for (const player of players) {
+            player.notCards.add(solution);
           }
         }
       }
-    }
 
-    // CHECK IF PLAYER HAS MAXIMUM NUMBER OF CARDS
-    // if so, push everything else to notCards
-    const howManyCards = Math.floor(18 / players.length);
+      // CHECK FOR CARDS THAT N-1 PLAYERS DON'T HAVE
+      // if solution is known, push them to the remaining player
+      for (const cardType of Object.keys(gameElements)) {
+        const ifSolution =
+          gameElements[cardType].filter(
+            (card) =>
+              players.filter((player) => player.notCards.has(card)).length ===
+              players.length
+          ).length > 0;
 
-    for (const player of players) {
-      if (player.cards.size === howManyCards) {
-        player.notCards = new Set(
-          gameElements.suspects
-            .concat(gameElements.tools)
-            .concat(gameElements.rooms)
-            .filter((el) => !player.cards.has(el))
+        if (ifSolution) {
+          for (const card of gameElements[cardType]) {
+            const whoHasInNotCards = [];
+            for (const player of players) {
+              if (player.notCards.has(card)) {
+                whoHasInNotCards.push(player);
+              }
+            }
+
+            if (whoHasInNotCards.length === players.length - 1) {
+              const remainingPlayer = players.filter(
+                (player) => !whoHasInNotCards.includes(player)
+              )[0];
+              remainingPlayer.cards.add(card);
+            }
+          }
+        }
+      }
+
+      // CHECK IF PLAYER HAS MAXIMUM NUMBER OF CARDS
+      // if so, push everything else to notCards
+      const howManyCards = Math.floor(18 / players.length);
+
+      for (const player of players) {
+        if (player.cards.size === howManyCards) {
+          player.notCards = new Set(
+            gameElements.suspects
+              .concat(gameElements.tools)
+              .concat(gameElements.rooms)
+              .filter((el) => !player.cards.has(el))
+          );
+        }
+      }
+
+      // CHECK ENQUIRIES
+      // if player was asked 3 cards, and they don't have 2 of them,
+      // they have to have the other 1
+      for (const enquiry of enquiries) {
+        const cards = enquiry.cards.filter(
+          (card) => !enquiry.player.notCards.has(card)
         );
+
+        if (cards.length === 1) {
+          enquiry.player.cards.add(cards[0]);
+          for (const player of players) {
+            if (player !== enquiry.player) {
+              player.notCards.add(cards[0]);
+            }
+          }
+        }
+      }
+
+      // break if nothing changed
+      if (
+        players.every(
+          (player) =>
+            [...player.cards].filter(
+              (card) =>
+                !playersAtStart
+                  .filter(
+                    (playerAtStart) => playerAtStart.player === player.player
+                  )[0]
+                  .cards.has(card)
+            ).length === 0 &&
+            [...player.notCards].filter(
+              (card) =>
+                !playersAtStart
+                  .filter(
+                    (playerAtStart) => playerAtStart.player === player.player
+                  )[0]
+                  .notCards.has(card)
+            ).length === 0
+        )
+      ) {
+        break;
       }
     }
   };
@@ -339,9 +386,12 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
         <i
           className="popup-icon bi bi-check-circle-fill"
           onClick={() => {
-            enquiries.push(Object.values(whatSomeoneShowedToSomeoneElse));
+            enquiries.push({
+              player: whoShowedToSomeoneElse,
+              cards: Object.values(whatSomeoneShowedToSomeoneElse),
+            });
 
-            setEnquiries(enquiries);
+            setEnquiries([...enquiries]);
             setPopup(false);
           }}
         ></i>

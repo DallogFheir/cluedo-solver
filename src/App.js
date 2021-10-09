@@ -5,7 +5,7 @@ import MainScreen from "./components/MainScreen";
 import { useState, useRef } from "react";
 
 // TODO
-// make next button responsive
+// make everything responsive
 
 function App() {
   const gameElements = {
