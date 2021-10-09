@@ -40,9 +40,9 @@ function App() {
 
   const [currentScreen, setCurrentScreen] = useState("TitleScreen");
   const [players, setPlayers] = useState([
-    { player: "", cards: [], notCards: [] },
-    { player: "", cards: [], notCards: [] },
-    { player: "", cards: [], notCards: [] },
+    { player: "", cards: new Set(), notCards: new Set() },
+    { player: "", cards: new Set(), notCards: new Set() },
+    { player: "", cards: new Set(), notCards: new Set() },
   ]);
 
   const background = useRef();

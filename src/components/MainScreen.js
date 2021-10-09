@@ -4,15 +4,14 @@ import { useState, useEffect, useRef } from "react";
 // TODO
 // make it so that cards in no-one-had-cards update when solution is known
 // players can show cards that they don't have
+// no one had cards doesnt work
 
 function MainScreen({ players, setPlayers, background, gameElements }) {
   const calculatePlayersCards = (player) =>
     gameElements.suspects
       .concat(gameElements.tools)
       .concat(gameElements.rooms)
-      .filter(
-        (el) => !player.cards.includes(el) && !player.notCards.includes(el)
-      );
+      .filter((el) => !player.cards.has(el) && !player.notCards.has(el));
 
   const mainLogic = () => {
     //   CHECK FOR SOLUTION THAT CAME ABOUT BY REJECTING OTHERS
@@ -24,7 +23,7 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
       const inSomeonesCards = [];
       for (const card of gameElements[cardType]) {
         for (const player of players) {
-          if (player.cards.includes(card)) {
+          if (player.cards.has(card)) {
             inSomeonesCards.push(card);
             break;
           }
@@ -38,7 +37,7 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
 
         // push to everyone's notCards
         for (const player of players) {
-          player.notCards.push(solution);
+          player.notCards.add(solution);
         }
       }
     }
@@ -49,15 +48,15 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
       const ifSolution =
         gameElements[cardType].filter(
           (card) =>
-            players.filter((player) => player.notCards.includes(card))
-              .length === players.length
+            players.filter((player) => player.notCards.has(card)).length ===
+            players.length
         ).length > 0;
 
       if (ifSolution) {
         for (const card of gameElements[cardType]) {
           const whoHasInNotCards = [];
           for (const player of players) {
-            if (player.notCards.includes(card)) {
+            if (player.notCards.has(card)) {
               whoHasInNotCards.push(player);
             }
           }
@@ -66,7 +65,7 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
             const remainingPlayer = players.filter(
               (player) => !whoHasInNotCards.includes(player)
             )[0];
-            remainingPlayer.cards.push(card);
+            remainingPlayer.cards.add(card);
           }
         }
       }
@@ -77,11 +76,13 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
     const howManyCards = Math.floor(18 / players.length);
 
     for (const player of players) {
-      if (player.cards.length === howManyCards) {
-        player.notCards = gameElements.suspects
-          .concat(gameElements.tools)
-          .concat(gameElements.rooms)
-          .filter((el) => !player.cards.includes(el));
+      if (player.cards.size === howManyCards) {
+        player.notCards = new Set(
+          gameElements.suspects
+            .concat(gameElements.tools)
+            .concat(gameElements.rooms)
+            .filter((el) => !player.cards.has(el))
+        );
       }
     }
   };
@@ -110,19 +111,19 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
       (el) =>
         !players
           .filter((el) => el !== whoAsked)
-          .some((player) => player.cards.includes(el))
+          .some((player) => player.cards.has(el))
     )[0],
     tool: gameElements.tools.filter(
       (el) =>
         !players
           .filter((el) => el !== whoAsked)
-          .some((player) => player.cards.includes(el))
+          .some((player) => player.cards.has(el))
     )[0],
     room: gameElements.rooms.filter(
       (el) =>
         !players
           .filter((el) => el !== whoAsked)
-          .some((player) => player.cards.includes(el))
+          .some((player) => player.cards.has(el))
     )[0],
   };
 
@@ -134,21 +135,21 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
         (player) => player.player === whoShowedToSomeoneElse.player
       )[0];
 
-      return !player.cards.includes(el);
+      return !player.cards.has(el);
     })[0],
     tool: gameElements.tools.filter((el) => {
       const player = players.filter(
         (player) => player.player === whoShowedToSomeoneElse.player
       )[0];
 
-      return !player.cards.includes(el);
+      return !player.cards.has(el);
     })[0],
     room: gameElements.rooms.filter((el) => {
       const player = players.filter(
         (player) => player.player === whoShowedToSomeoneElse.player
       )[0];
 
-      return !player.cards.includes(el);
+      return !player.cards.has(el);
     })[0],
   };
 
@@ -241,10 +242,10 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
             //   handles pushing what was shown into cards and notCards
             for (const player of players.slice(1)) {
               if (player === whoShowed) {
-                player.cards.push(whatWasShown);
+                player.cards.add(whatWasShown);
                 for (const otherPlayer of players.slice(1)) {
                   if (otherPlayer !== whoShowed) {
-                    otherPlayer.notCards.push(whatWasShown);
+                    otherPlayer.notCards.add(whatWasShown);
                   }
                 }
                 setPlayers([...players]);
@@ -289,7 +290,7 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
                 (player) => player.player === whoShowedToSomeoneElse.player
               )[0];
 
-              return !player.cards.includes(el);
+              return !player.cards.has(el);
             })
             .map((suspect, idx) => (
               <option key={idx} value={suspect}>
@@ -310,7 +311,7 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
                 (player) => player.player === whoShowedToSomeoneElse.player
               )[0];
 
-              return !player.cards.includes(el);
+              return !player.cards.has(el);
             })
             .map((tool, idx) => (
               <option key={idx} value={tool}>
@@ -331,7 +332,7 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
                 (player) => player.player === whoShowedToSomeoneElse.player
               )[0];
 
-              return !player.cards.includes(el);
+              return !player.cards.has(el);
             })
             .map((room, idx) => (
               <option key={idx} value={room}>
@@ -381,7 +382,7 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
               (el) =>
                 !players
                   .filter((el) => el !== whoAsked)
-                  .some((player) => player.cards.includes(el))
+                  .some((player) => player.cards.has(el))
             )
             .map((suspect, idx) => (
               <option key={idx} value={suspect}>
@@ -400,7 +401,7 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
               (el) =>
                 !players
                   .filter((el) => el !== whoAsked)
-                  .some((player) => player.cards.includes(el))
+                  .some((player) => player.cards.has(el))
             )
             .map((tool, idx) => (
               <option key={idx} value={tool}>
@@ -419,7 +420,7 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
               (el) =>
                 !players
                   .filter((el) => el !== whoAsked)
-                  .some((player) => player.cards.includes(el))
+                  .some((player) => player.cards.has(el))
             )
             .map((room, idx) => (
               <option key={idx} value={room}>
@@ -434,7 +435,7 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
             for (const player of players.filter(
               (player) => player !== whoAsked
             )) {
-              player.notCards.push(...Object.values(whatNoOneHad));
+              player.notCards.add(...Object.values(whatNoOneHad));
             }
 
             setPlayers([...players]);
@@ -511,18 +512,17 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
                     <td
                       className={
                         players.filter(
-                          (player) => !player.notCards.includes(suspect)
+                          (player) => !player.notCards.has(suspect)
                         ).length === 0
                           ? "solution"
                           : players.filter((player) =>
-                              player.cards.includes(suspect)
+                              player.cards.has(suspect)
                             ).length > 0 ||
                             gameElements.suspects
                               .map(
                                 (suspect) =>
                                   players.filter(
-                                    (player) =>
-                                      !player.notCards.includes(suspect)
+                                    (player) => !player.notCards.has(suspect)
                                   ).length === 0
                               )
                               .some((el) => el)
@@ -536,13 +536,13 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
                       <td
                         key={idx}
                         className={[
-                          player.notCards.includes(suspect) ? "not-card" : "",
+                          player.notCards.has(suspect) ? "not-card" : "",
                           "table-item",
                         ].join(" ")}
                       >
-                        {player.cards.includes(suspect)
+                        {player.cards.has(suspect)
                           ? "✓"
-                          : player.notCards.includes(suspect)
+                          : player.notCards.has(suspect)
                           ? "✕"
                           : ""}
                       </td>
@@ -576,18 +576,16 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
                   <tr key={toolIdx}>
                     <td
                       className={
-                        players.filter(
-                          (player) => !player.notCards.includes(tool)
-                        ).length === 0
+                        players.filter((player) => !player.notCards.has(tool))
+                          .length === 0
                           ? "solution"
-                          : players.filter((player) =>
-                              player.cards.includes(tool)
-                            ).length > 0 ||
+                          : players.filter((player) => player.cards.has(tool))
+                              .length > 0 ||
                             gameElements.tools
                               .map(
                                 (tool) =>
                                   players.filter(
-                                    (player) => !player.notCards.includes(tool)
+                                    (player) => !player.notCards.has(tool)
                                   ).length === 0
                               )
                               .some((el) => el)
@@ -601,13 +599,13 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
                       <td
                         key={idx}
                         className={[
-                          player.notCards.includes(tool) ? "not-card" : "",
+                          player.notCards.has(tool) ? "not-card" : "",
                           "table-item",
                         ].join(" ")}
                       >
-                        {player.cards.includes(tool)
+                        {player.cards.has(tool)
                           ? "✓"
-                          : player.notCards.includes(tool)
+                          : player.notCards.has(tool)
                           ? "✕"
                           : ""}
                       </td>
@@ -641,18 +639,16 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
                   <tr key={roomIdx}>
                     <td
                       className={
-                        players.filter(
-                          (player) => !player.notCards.includes(room)
-                        ).length === 0
+                        players.filter((player) => !player.notCards.has(room))
+                          .length === 0
                           ? "solution"
-                          : players.filter((player) =>
-                              player.cards.includes(room)
-                            ).length > 0 ||
+                          : players.filter((player) => player.cards.has(room))
+                              .length > 0 ||
                             gameElements.rooms
                               .map(
                                 (room) =>
                                   players.filter(
-                                    (player) => !player.notCards.includes(room)
+                                    (player) => !player.notCards.has(room)
                                   ).length === 0
                               )
                               .some((el) => el)
@@ -666,13 +662,13 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
                       <td
                         key={idx}
                         className={[
-                          player.notCards.includes(room) ? "not-card" : "",
+                          player.notCards.has(room) ? "not-card" : "",
                           "table-item",
                         ].join(" ")}
                       >
-                        {player.cards.includes(room)
+                        {player.cards.has(room)
                           ? "✓"
-                          : player.notCards.includes(room)
+                          : player.notCards.has(room)
                           ? "✕"
                           : ""}
                       </td>

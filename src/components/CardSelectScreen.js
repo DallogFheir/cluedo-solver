@@ -133,13 +133,13 @@ function CardSelectScreen({
                 notCards = [...notCards, ...notTypeCards];
               }
 
-              players[0].cards = playerCards;
-              players[0].notCards = notCards;
+              players[0].cards = new Set(playerCards);
+              players[0].notCards = new Set(notCards);
 
               //   put player's cards into notCards of other players
               for (const player of players) {
                 if (player !== players[0]) {
-                  player.notCards = [...playerCards];
+                  player.notCards = new Set([...playerCards]);
                 }
               }
 

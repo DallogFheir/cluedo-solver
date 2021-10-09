@@ -58,7 +58,10 @@ function TitleScreen({ players, setPlayers, setCurrentScreen }) {
           <i
             className="add-btn bi bi-plus-circle-fill"
             onClick={() => {
-              setPlayers([...players, { player: null, cards: [] }]);
+              setPlayers([
+                ...players,
+                { player: null, cards: new Set(), notCards: new Set() },
+              ]);
             }}
           ></i>
         </p>
