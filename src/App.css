@@ -9,3 +9,18 @@
   font-family: "Nunito", sans-serif;
   color: white;
 }
+
+/* height must be unchanged to work on mobile */
+@media (max-width: 992px) {
+  .background {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #01423a;
+    height: initial;
+    min-width: 100%;
+    font-family: "Nunito", sans-serif;
+    color: white;
+  }
+}
