@@ -7,8 +7,10 @@ function CardSelectScreen({
   setCurrentScreen,
   gameElements,
 }) {
-  const howManyCards = Math.floor(18 / players.length);
-  const playerCards = Array(howManyCards).fill("Ksiądz Zieliński");
+  const howManyEachPlayer = Math.floor(18 / players.length);
+  const howManyVisible = 18 % players.length;
+  const howManyCards = howManyEachPlayer + howManyVisible;
+  const playerCards = Array(howManyCards).fill(gameElements.suspects[0]);
 
   //   refs for selects
   const playerCardsRefs = [
@@ -25,47 +27,91 @@ function CardSelectScreen({
     <div className="card-select-screen fade-in">
       <p>Wybierz swoje karty:</p>
       <form className="card-form">
-        {playerCards.map((_, idx) => (
-          <select
-            key={idx}
-            ref={playerCardsRefs[idx]}
-            onChange={(e) => {
-              // remove error shadow when changing to another value
-              e.target.classList.remove("error-shadow");
-              // modify playerCards
-              playerCards[idx] = e.target.value;
-            }}
-          >
-            <optgroup label="Podejrzani">
-              {gameElements.suspects.map((suspect, idx) => (
-                <option key={idx} value={suspect}>
-                  {suspect}
-                </option>
-              ))}
-            </optgroup>
-            <optgroup label="Narzędzia zbrodni">
-              {gameElements.tools.map((tool, idx) => (
-                <option key={idx} value={tool}>
-                  {tool}
-                </option>
-              ))}
-            </optgroup>
-            <optgroup label="Pomieszczenia">
-              {gameElements.rooms.map((room, idx) => (
-                <option key={idx} value={room}>
-                  {room}
-                </option>
-              ))}
-            </optgroup>
-          </select>
-        ))}
+        {Array(howManyEachPlayer)
+          .fill(0)
+          .map((_, idx) => (
+            <select
+              key={idx}
+              ref={playerCardsRefs[idx]}
+              onChange={(e) => {
+                // remove error shadow when changing to another value
+                e.target.classList.remove("error-shadow");
+                // modify playerCards
+                playerCards[idx] = e.target.value;
+              }}
+            >
+              <optgroup label="Podejrzani">
+                {gameElements.suspects.map((suspect, idx) => (
+                  <option key={idx} value={suspect}>
+                    {suspect}
+                  </option>
+                ))}
+              </optgroup>
+              <optgroup label="Narzędzia zbrodni">
+                {gameElements.tools.map((tool, idx) => (
+                  <option key={idx} value={tool}>
+                    {tool}
+                  </option>
+                ))}
+              </optgroup>
+              <optgroup label="Pomieszczenia">
+                {gameElements.rooms.map((room, idx) => (
+                  <option key={idx} value={room}>
+                    {room}
+                  </option>
+                ))}
+              </optgroup>
+            </select>
+          ))}
       </form>
+      {howManyVisible !== 0 && (
+        <>
+          <p>Wybierz karty widoczne dla wszystkich:</p>
+          <form className="card-form">
+            {Array(howManyVisible)
+              .fill(0)
+              .map((_, idx) => (
+                <select
+                  key={idx}
+                  ref={playerCardsRefs[idx + howManyEachPlayer]}
+                  onChange={(e) => {
+                    // remove error shadow when changing to another value
+                    e.target.classList.remove("error-shadow");
+                    // modify playerCards
+                    playerCards[idx + howManyEachPlayer] = e.target.value;
+                  }}
+                >
+                  <optgroup label="Podejrzani">
+                    {gameElements.suspects.map((suspect, idx) => (
+                      <option key={idx} value={suspect}>
+                        {suspect}
+                      </option>
+                    ))}
+                  </optgroup>
+                  <optgroup label="Narzędzia zbrodni">
+                    {gameElements.tools.map((tool, idx) => (
+                      <option key={idx} value={tool}>
+                        {tool}
+                      </option>
+                    ))}
+                  </optgroup>
+                  <optgroup label="Pomieszczenia">
+                    {gameElements.rooms.map((room, idx) => (
+                      <option key={idx} value={room}>
+                        {room}
+                      </option>
+                    ))}
+                  </optgroup>
+                </select>
+              ))}
+          </form>
+        </>
+      )}
       <div className="next-btn-container">
         <i
           className="next-btn bi bi-arrow-right-circle-fill"
           onClick={() => {
             // check for duplicates
-
             const counter = {};
             playerCards.forEach((el) => {
               if (Object.keys(counter).includes(el)) {
@@ -74,7 +120,7 @@ function CardSelectScreen({
                 counter[el] = 1;
               }
             });
-
+            console.log(counter);
             const duplicates = [];
             for (const key in counter) {
               if (counter[key] > 1) {
@@ -136,10 +182,23 @@ function CardSelectScreen({
               players[0].cards = new Set(playerCards);
               players[0].notCards = new Set(notCards);
 
+              //   put cards visible by everyone into everyone's cards
+              const visibleCards = playerCards.slice(
+                howManyEachPlayer,
+                playerCards.length
+              );
+              for (const card of visibleCards) {
+                for (const player of players) {
+                  player.cards.add(card);
+                }
+              }
+
               //   put player's cards into notCards of other players
               for (const player of players) {
                 if (player !== players[0]) {
-                  player.notCards = new Set([...playerCards]);
+                  player.notCards = new Set(
+                    playerCards.filter((card) => !visibleCards.includes(card))
+                  );
                 }
               }
 
