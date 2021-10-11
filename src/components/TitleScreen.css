@@ -44,6 +44,7 @@
 .next-btn {
   font-size: 60px;
   position: sticky;
+  text-shadow: 0px 0px 20px #01423a;
 }
 
 .next-btn:hover {

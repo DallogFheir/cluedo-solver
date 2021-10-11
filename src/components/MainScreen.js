@@ -231,6 +231,7 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
         <p className="popup-title">ktoś pokazał mi kartę</p>
         <p className="popup-text">Wybierz osobę, która pokazała Ci kartę:</p>
         <select
+          className="popup-select"
           onChange={(e) => {
             const playerName = e.target.value;
 
@@ -247,6 +248,7 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
         </select>
         <p className="popup-text">Wybierz pokazaną Ci kartę:</p>
         <select
+          className="popup-select"
           onChange={(e) => {
             whatWasShown = e.target.value;
           }}
@@ -402,6 +404,7 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
         <p className="popup-title">nikt nie miał kart</p>
         <p className="popup-text">Wybierz osobę, która pytała o karty:</p>
         <select
+          className="popup-select"
           onChange={(e) => {
             const playerName = e.target.value;
 
