@@ -429,14 +429,12 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
               players.every((player) => player.notCards.has(suspect))
             ).length === 1
               ? gameElements.suspects
-                  .filter((el) => {
-                    console.log(el, whoAsked.cards.has(el));
-                    return (
+                  .filter(
+                    (el) =>
                       whoAsked.cards.has(el) ||
                       players.every((player) => player.notCards.has(el)) ||
                       !whoAsked.notCards.has(el)
-                    );
-                  })
+                  )
                   .map((suspect, idx) => (
                     <option key={idx} value={suspect}>
                       {suspect}
@@ -469,14 +467,12 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
               players.every((player) => player.notCards.has(tool))
             ).length === 1
               ? gameElements.tools
-                  .filter((el) => {
-                    console.log(el, whoAsked.cards.has(el));
-                    return (
+                  .filter(
+                    (el) =>
                       whoAsked.cards.has(el) ||
                       players.every((player) => player.notCards.has(el)) ||
                       !whoAsked.notCards.has(el)
-                    );
-                  })
+                  )
                   .map((tool, idx) => (
                     <option key={idx} value={tool}>
                       {tool}
@@ -509,14 +505,12 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
               players.every((player) => player.notCards.has(room))
             ).length === 1
               ? gameElements.rooms
-                  .filter((el) => {
-                    console.log(el, whoAsked.cards.has(el));
-                    return (
+                  .filter(
+                    (el) =>
                       whoAsked.cards.has(el) ||
                       players.every((player) => player.notCards.has(el)) ||
                       !whoAsked.notCards.has(el)
-                    );
-                  })
+                  )
                   .map((room, idx) => (
                     <option key={idx} value={room}>
                       {room}

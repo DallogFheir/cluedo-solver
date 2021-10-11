@@ -120,7 +120,7 @@ function CardSelectScreen({
                 counter[el] = 1;
               }
             });
-            console.log(counter);
+
             const duplicates = [];
             for (const key in counter) {
               if (counter[key] > 1) {

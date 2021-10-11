@@ -4,11 +4,6 @@ import CardSelectScreen from "./components/CardSelectScreen";
 import MainScreen from "./components/MainScreen";
 import { useState, useRef } from "react";
 
-// TODO
-// make everything responsive
-// A component is changing an uncontrolled input to be controlled. This is likely caused by the value changing from undefined to a defined value, which should not happen. Decide between using a controlled or uncontrolled input element for the lifetime of the component.
-// add cards visible for all people
-
 function App() {
   const gameElements = {
     rooms: [

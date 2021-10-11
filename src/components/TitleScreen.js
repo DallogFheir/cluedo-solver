@@ -32,9 +32,9 @@ function TitleScreen({ players, setPlayers, setCurrentScreen }) {
                 refs[idx] = thisInput;
               }}
               placeholder={
-                idx === 0 ? "Wpisz swoję imię." : "Wpisz imię gracza."
+                idx === 0 ? "Wpisz swoje imię." : "Wpisz imię gracza."
               }
-              value={player.player ?? undefined}
+              value={player.player ?? ""}
               onChange={(e) => {
                 players[idx].player = e.target.value;
                 setPlayers([...players]);
