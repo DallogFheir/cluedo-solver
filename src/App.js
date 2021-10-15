@@ -26,7 +26,7 @@ function App() {
       "Pułkownik Żółtkowski",
     ],
     tools: [
-      "Klucz",
+      "Klucz francuski",
       "Lina",
       "Metalowa rurka",
       "Rewolwer",

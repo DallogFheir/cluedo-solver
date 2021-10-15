@@ -147,25 +147,25 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
   const [whoShowed, setWhoShowed] = useState(whoShowedTemp);
   let whatWasShown = calculatePlayersCards(whoShowed)[0];
 
-  const [whoAsked, setWhoAsked] = useState(players[0]);
-  let whatNoOneHad = {
+  const [whoDidntHaveCards, setWhoDidntHaveCards] = useState(players[1]);
+  let whatSomeoneDidntHave = {
     suspect: gameElements.suspects.filter(
       (el) =>
         !players
-          .filter((el) => el !== whoAsked)
-          .some((player) => player.cards.has(el))
+          .filter((player) => player === whoDidntHaveCards)[0]
+          .cards.has(el)
     )[0],
     tool: gameElements.tools.filter(
       (el) =>
         !players
-          .filter((el) => el !== whoAsked)
-          .some((player) => player.cards.has(el))
+          .filter((player) => player === whoDidntHaveCards)[0]
+          .cards.has(el)
     )[0],
     room: gameElements.rooms.filter(
       (el) =>
         !players
-          .filter((el) => el !== whoAsked)
-          .some((player) => player.cards.has(el))
+          .filter((player) => player === whoDidntHaveCards)[0]
+          .cards.has(el)
     )[0],
   };
 
@@ -213,7 +213,6 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
           e.target !== popupRef.current &&
           e.target !== checkBtn
         ) {
-          setWhoAsked(players[0]);
           setPopup(false);
         }
       }
@@ -399,10 +398,10 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
         ></i>
       </div>
     ),
-    "no-one-had-cards": (
+    "someone-didnt-have-cards": (
       <div className="popup" ref={popupRef}>
-        <p className="popup-title">nikt nie miał kart</p>
-        <p className="popup-text">Wybierz osobę, która pytała o karty:</p>
+        <p className="popup-title">ktoś nie miał kart</p>
+        <p className="popup-text">Wybierz osobę, która nie miała kart:</p>
         <select
           className="popup-select"
           onChange={(e) => {
@@ -410,144 +409,67 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
 
             for (const player of players) {
               if (player.player === playerName) {
-                setWhoAsked(player);
+                setWhoDidntHaveCards(player);
               }
             }
           }}
         >
-          {players.map((player, idx) => (
+          {players.slice(1).map((player, idx) => (
             <option key={idx}>{player.player}</option>
           ))}
         </select>
-        <p className="popup-text">Wybierz karty, których nikt nie miał:</p>
+        <p className="popup-text">Wybierz karty, których ktoś nie miał:</p>
         <select
           className="popup-select"
           onChange={(e) => {
-            whatNoOneHad.suspect = e.target.value;
+            whatSomeoneDidntHave.suspect = e.target.value;
           }}
         >
-          {
-            //   if solution is known, only the player who asked's cards can be had by no one
-            gameElements.suspects.filter((suspect) =>
-              players.every((player) => player.notCards.has(suspect))
-            ).length === 1
-              ? gameElements.suspects
-                  .filter(
-                    (el) =>
-                      whoAsked.cards.has(el) ||
-                      players.every((player) => player.notCards.has(el)) ||
-                      !whoAsked.notCards.has(el)
-                  )
-                  .map((suspect, idx) => (
-                    <option key={idx} value={suspect}>
-                      {suspect}
-                    </option>
-                  ))
-              : gameElements.suspects
-                  .filter(
-                    (el) =>
-                      !players
-                        .filter((el) => el !== whoAsked)
-                        .some((player) => player.cards.has(el)) ||
-                      whoAsked.cards.has(el)
-                  )
-                  .map((suspect, idx) => (
-                    <option key={idx} value={suspect}>
-                      {suspect}
-                    </option>
-                  ))
-          }
+          {gameElements.suspects
+            .filter((suspect) => !whoDidntHaveCards.cards.has(suspect))
+            .map((suspect, idx) => (
+              <option key={idx}>{suspect}</option>
+            ))}
         </select>
         <select
           className="popup-select"
           onChange={(e) => {
-            whatNoOneHad.tool = e.target.value;
+            whatSomeoneDidntHave.tool = e.target.value;
           }}
         >
-          {
-            //   if solution is known, only the player who asked's cards can be had by no one
-            gameElements.tools.filter((tool) =>
-              players.every((player) => player.notCards.has(tool))
-            ).length === 1
-              ? gameElements.tools
-                  .filter(
-                    (el) =>
-                      whoAsked.cards.has(el) ||
-                      players.every((player) => player.notCards.has(el)) ||
-                      !whoAsked.notCards.has(el)
-                  )
-                  .map((tool, idx) => (
-                    <option key={idx} value={tool}>
-                      {tool}
-                    </option>
-                  ))
-              : gameElements.tools
-                  .filter(
-                    (el) =>
-                      !players
-                        .filter((el) => el !== whoAsked)
-                        .some((player) => player.cards.has(el)) ||
-                      whoAsked.cards.has(el)
-                  )
-                  .map((tool, idx) => (
-                    <option key={idx} value={tool}>
-                      {tool}
-                    </option>
-                  ))
-          }
+          {gameElements.tools
+            .filter((tool) => !whoDidntHaveCards.cards.has(tool))
+            .map((tool, idx) => (
+              <option key={idx}>{tool}</option>
+            ))}
         </select>
         <select
           className="popup-select"
           onChange={(e) => {
-            whatNoOneHad.room = e.target.value;
+            whatSomeoneDidntHave.room = e.target.value;
           }}
         >
-          {
-            //   if solution is known, only the player who asked's cards can be had by no one
-            gameElements.rooms.filter((room) =>
-              players.every((player) => player.notCards.has(room))
-            ).length === 1
-              ? gameElements.rooms
-                  .filter(
-                    (el) =>
-                      whoAsked.cards.has(el) ||
-                      players.every((player) => player.notCards.has(el)) ||
-                      !whoAsked.notCards.has(el)
-                  )
-                  .map((room, idx) => (
-                    <option key={idx} value={room}>
-                      {room}
-                    </option>
-                  ))
-              : gameElements.rooms
-                  .filter(
-                    (el) =>
-                      !players
-                        .filter((el) => el !== whoAsked)
-                        .some((player) => player.cards.has(el)) ||
-                      whoAsked.cards.has(el)
-                  )
-                  .map((room, idx) => (
-                    <option key={idx} value={room}>
-                      {room}
-                    </option>
-                  ))
-          }
+          {gameElements.rooms
+            .filter((room) => !whoDidntHaveCards.cards.has(room))
+            .map((room, idx) => (
+              <option key={idx}>{room}</option>
+            ))}
         </select>
         <i
           className="popup-icon bi bi-check-circle-fill"
           onClick={() => {
-            //   pushes what no one had into not cards
-            for (const player of players.filter(
-              (player) => player !== whoAsked
-            )) {
-              player.notCards = new Set([
-                ...player.notCards,
-                ...Object.values(whatNoOneHad),
-              ]);
-            }
+            //   pushes what someone didn't have into their notCards
+            const player = players.filter(
+              (player) => player === whoDidntHaveCards
+            )[0];
+            console.log(player);
 
-            setWhoAsked(players[0]);
+            player.notCards = new Set([
+              ...player.notCards,
+              ...Object.values(whatSomeoneDidntHave),
+            ]);
+
+            setWhoDidntHaveCards(players[1]);
             setPlayers([...players]);
             setPopup(false);
           }}
@@ -590,10 +512,10 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
               className="btn btn-light event-btn"
               onClick={() => {
                 setPopup(true);
-                setPopupType("no-one-had-cards");
+                setPopupType("someone-didnt-have-cards");
               }}
             >
-              nikt nie miał kart
+              ktoś nie miał kart
             </button>
           </div>
         </div>
