@@ -137,7 +137,7 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
   //   whoShowed is first player that can still show cards
   let whoShowedTemp;
   for (const player of players.slice(1)) {
-    if (calculatePlayersCards(player) !== 0) {
+    if (calculatePlayersCards(player).length !== 0) {
       whoShowedTemp = player;
       break;
     }
@@ -241,9 +241,11 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
             }
           }}
         >
-          {players.slice(1).map((player, idx) => (
-            <option key={idx}>{player.player}</option>
-          ))}
+          {players
+            .filter((player) => calculatePlayersCards(player).length !== 0)
+            .map((player, idx) => (
+              <option key={idx}>{player.player}</option>
+            ))}
         </select>
         <p className="popup-text">Wybierz pokazaną Ci kartę:</p>
         <select
@@ -462,7 +464,6 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
             const player = players.filter(
               (player) => player === whoDidntHaveCards
             )[0];
-            console.log(player);
 
             player.notCards = new Set([
               ...player.notCards,
@@ -493,6 +494,7 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
             <button
               className="btn btn-light event-btn"
               onClick={() => {
+                setWhoShowed(whoShowedTemp);
                 setPopup(true);
                 setPopupType("someone-showed-me");
               }}
