@@ -10,6 +10,6 @@ Aplikacja pomagająca znaleźć rozwiązanie w grze planszowej Cluedo.
 
    - **ktoś pokazał mi kartę** - wprowadź kto pokazał Ci kartę i jaką
    - **ktoś pokazał kartę komuś innemu** - wprowadź kto pokazywał kartę i o co był pytany
-   - **nikt nie miał kart** - wprowadź kto pytał o karty i o jakie
+   - **ktoś nie miał kart** - wprowadź kto nie miał kart i o co był pytany
 
    Aplikacja na bieżąco będzie wykreślała karty. Rozwiązanie zostanie zaznaczone niebieskim podświetleniem.
