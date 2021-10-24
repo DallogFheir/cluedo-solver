@@ -134,17 +134,8 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
 
   const popupRef = useRef();
 
-  //   whoShowed is first player that can still show cards
-  let whoShowedTemp;
-  for (const player of players.slice(1)) {
-    if (calculatePlayersCards(player).length !== 0) {
-      whoShowedTemp = player;
-      break;
-    }
-  }
-
   //   states to handle events
-  const [whoShowed, setWhoShowed] = useState(whoShowedTemp);
+  const [whoShowed, setWhoShowed] = useState(players[1]);
   let whatWasShown = calculatePlayersCards(whoShowed)[0];
 
   const [whoDidntHaveCards, setWhoDidntHaveCards] = useState(players[1]);
@@ -169,8 +160,9 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
     )[0],
   };
 
-  const [whoShowedToSomeoneElse, setWhoShowedToSomeoneElse] =
-    useState(whoShowedTemp);
+  const [whoShowedToSomeoneElse, setWhoShowedToSomeoneElse] = useState(
+    players[1]
+  );
   let whatSomeoneShowedToSomeoneElse = {
     suspect: gameElements.suspects.filter((el) => {
       const player = players.filter(
@@ -494,7 +486,11 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
             <button
               className="btn btn-light event-btn"
               onClick={() => {
-                setWhoShowed(whoShowedTemp);
+                setWhoShowed(
+                  players.filter(
+                    (player) => calculatePlayersCards(player).length !== 0
+                  )[0]
+                );
                 setPopup(true);
                 setPopupType("someone-showed-me");
               }}
@@ -504,6 +500,7 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
             <button
               className="btn btn-light event-btn"
               onClick={() => {
+                setWhoShowedToSomeoneElse(players[1]);
                 setPopup(true);
                 setPopupType("someone-showed-someone-else");
               }}
@@ -513,6 +510,7 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
             <button
               className="btn btn-light event-btn"
               onClick={() => {
+                setWhoDidntHaveCards(players[1]);
                 setPopup(true);
                 setPopupType("someone-didnt-have-cards");
               }}
