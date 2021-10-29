@@ -45,6 +45,16 @@
   text-decoration: line-through;
 }
 
+.start-anew {
+  text-align: center;
+}
+
+.start-anew-text {
+  font-size: 0.9em;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 .popup {
   position: absolute;
   top: 50%;

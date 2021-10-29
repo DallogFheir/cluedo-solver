@@ -1,7 +1,15 @@
 import "./MainScreen.css";
 import { useState, useEffect, useRef } from "react";
 
-function MainScreen({ players, setPlayers, background, gameElements }) {
+function MainScreen({
+  setCurrentScreen,
+  players,
+  setPlayers,
+  enquiries,
+  setEnquiries,
+  background,
+  gameElements,
+}) {
   const calculatePlayersCards = (player) =>
     gameElements.suspects
       .concat(gameElements.tools)
@@ -88,14 +96,18 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
       // if player was asked 3 cards, and they don't have 2 of them,
       // they have to have the other 1
       for (const enquiry of enquiries) {
-        const cards = enquiry.cards.filter(
-          (card) => !enquiry.player.notCards.has(card)
+        const enquiryPlayer = players.filter(
+          (player) => player.player === enquiry.player
+        )[0];
+
+        const cards = enquiry.enquiryCards.filter(
+          (card) => !enquiryPlayer.notCards.has(card)
         );
 
         if (cards.length === 1) {
-          enquiry.player.cards.add(cards[0]);
+          enquiryPlayer.cards.add(cards[0]);
           for (const player of players) {
-            if (player !== enquiry.player) {
+            if (player !== enquiryPlayer) {
               player.notCards.add(cards[0]);
             }
           }
@@ -186,8 +198,6 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
       return !player.cards.has(el);
     })[0],
   };
-
-  const [enquiries, setEnquiries] = useState([]);
 
   //   add listener to background to close the popup
   useEffect(() => {
@@ -382,8 +392,8 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
           className="popup-icon bi bi-check-circle-fill"
           onClick={() => {
             enquiries.push({
-              player: whoShowedToSomeoneElse,
-              cards: Object.values(whatSomeoneShowedToSomeoneElse),
+              player: whoShowedToSomeoneElse.player,
+              enquiryCards: Object.values(whatSomeoneShowedToSomeoneElse),
             });
 
             setEnquiries([...enquiries]);
@@ -710,6 +720,27 @@ function MainScreen({ players, setPlayers, background, gameElements }) {
               </tbody>
             </table>
           </div>
+        </div>
+        <div className="row mt-5">
+          <p className="start-anew">
+            <span
+              className="start-anew-text"
+              onClick={() => {
+                if (window.confirm("Czy na pewno chcesz zacząć od początku?")) {
+                  localStorage.removeItem("savedState");
+                  setCurrentScreen("TitleScreen");
+                  setPlayers([
+                    { player: "", cards: new Set(), notCards: new Set() },
+                    { player: "", cards: new Set(), notCards: new Set() },
+                    { player: "", cards: new Set(), notCards: new Set() },
+                  ]);
+                  setEnquiries([]);
+                }
+              }}
+            >
+              Zacznij od początku
+            </span>
+          </p>
         </div>
       </div>
       {popup && popups[popupType]}
