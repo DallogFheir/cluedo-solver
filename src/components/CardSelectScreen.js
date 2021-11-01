@@ -107,7 +107,7 @@ function CardSelectScreen({
           </form>
         </>
       )}
-      <div className="next-btn-container">
+      <div>
         <i
           className="next-btn bi bi-arrow-right-circle-fill"
           onClick={() => {

@@ -35,12 +35,6 @@
   color: #b44a03;
 }
 
-.next-btn-container {
-  position: absolute;
-  right: 20px;
-  bottom: 20px;
-}
-
 .next-btn {
   font-size: 60px;
   position: sticky;

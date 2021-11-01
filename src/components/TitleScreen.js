@@ -66,7 +66,7 @@ function TitleScreen({ players, setPlayers, setCurrentScreen }) {
           ></i>
         </p>
       )}
-      <div className="next-btn-container">
+      <div>
         <i
           className="next-btn bi bi-arrow-right-circle-fill"
           onClick={() => {
