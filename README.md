@@ -13,3 +13,5 @@ Aplikacja pomagająca znaleźć rozwiązanie w grze planszowej Cluedo.
    - **ktoś nie miał kart** - wprowadź kto nie miał kart i o co był pytany
 
    Aplikacja na bieżąco będzie wykreślała karty. Rozwiązanie zostanie zaznaczone niebieskim podświetleniem.
+
+   Uwaga! Jeśli nie da się wybrać danej karty, oznacza to, że aplikacja ma już informację na jej temat. Należy wtedy nie wprowadzać żadnych danych.
