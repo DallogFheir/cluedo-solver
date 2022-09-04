@@ -1,5 +1,8 @@
 # cluedo-solver
 
+**Zapraszam do sprawdzenia nowszej wersji - [Cluedo Solver v. 2](https://github.com/DallogFheir/cluedo-solver-v2)**
+
+
 Aplikacja pomagająca znaleźć rozwiązanie w grze planszowej Cluedo.
 
 ## Jak używać
